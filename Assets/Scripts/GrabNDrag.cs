@@ -6,7 +6,6 @@ public class GrabNDrag : MonoBehaviour {
 	public KeyCode grabDrag = KeyCode.E;
 	public float speed;
 	public bool grabbing;
-	private Collider col_;
 
 	void Start(){
 
@@ -16,20 +15,15 @@ public class GrabNDrag : MonoBehaviour {
 	// Update is called once per frame
 	void OnTriggerStay (Collider _col) {
 
-        if (_col.GetComponent<ObjectClass>() == null)
+        if (_col.GetComponent<ObjectController>() == null)
             return; 
 
-		if(_col.GetComponent<ObjectClass>().canBeDragged == true){
-
-			print("p1");
+		if(_col.GetComponent<ObjectController>().isDraggable == true){
 			
 			if(Input.GetKeyDown(grabDrag)){
 
-				print("p2");
-
 				grabbing = !grabbing;
-
-				col_ = _col;
+				Dragouille(_col);
 			}
 
 
@@ -37,19 +31,21 @@ public class GrabNDrag : MonoBehaviour {
 	
 	}
 
-	void Update(){
+	public void Dragouille(Collider col_){
 
+
+		//2 way of doing this
+
+		//1:
+			//float step = speed * Time.deltaTime;
+			//col_.transform.position = Vector3.MoveTowards(col_.transform.position, this.transform.position, step);
+
+		//2:
 		if(grabbing){
-			Dragouille();
+			col_.transform.parent = this.transform;}
+		if(!grabbing){
+			this.transform.GetChild(0).transform.parent = null;
 		}
-
-	}
-
-	public void Dragouille(){
-		
-		print("p3");
-			float step = speed * Time.deltaTime;
-			col_.transform.position = Vector3.MoveTowards(col_.transform.position, this.transform.position, step);
 
 	}
 }
