@@ -11,8 +11,8 @@ public class GunController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         if(!bdebug)
-        Cursor.lockState = CursorLockMode.Locked; 
-	}
+            Screen.lockCursor = true;
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -22,6 +22,16 @@ public class GunController : MonoBehaviour {
             nextFire = Time.time + fireRate;
             Instantiate(bullet, transform.position, transform.rotation);
         }
+
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            bdebug = !bdebug; 
+        }
+
+        if (!bdebug)
+            Screen.lockCursor = true;
+        else
+            Screen.lockCursor = false;
 
     }
 
