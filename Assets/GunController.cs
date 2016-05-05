@@ -3,36 +3,45 @@ using System.Collections;
 
 public class GunController : MonoBehaviour {
 
-    public GameObject bullet;
+   // public GameObject bullet;
+    public ObjectPoolScript thisPool;
     public float fireRate = 1f;
     public bool bdebug = false;
-    private float nextFire; 
+    private float nextFire;
 
-	// Use this for initialization
-	void Start () {
-        if(!bdebug)
-            Screen.lockCursor = true;
+
+
+    void Start()
+    {
+        if (thisPool == null)
+            Debug.LogError("Couldnt find the ObjectPoolScript for " + name); 
+
+
     }
-	
-	// Update is called once per frame
-	void Update () {
 
-        if (Input.GetButton("Fire1") && Time.time > nextFire)
+
+    void Update () {
+
+        if (Input.GetButtonDown("Fire1") && Time.time > nextFire)
         {
             nextFire = Time.time + fireRate;
-            Instantiate(bullet, transform.position, transform.rotation);
+            Fire(); 
         }
+    }
 
-        if(Input.GetKeyDown(KeyCode.Escape))
-        {
-            bdebug = !bdebug; 
-        }
 
-        if (!bdebug)
-            Screen.lockCursor = true;
-        else
-            Screen.lockCursor = false;
 
+    public bool Fire()
+    {
+        GameObject obj = thisPool.GetPooledObject();
+        if (obj == null)
+            return false;
+
+        obj.transform.position = transform.position;
+        obj.transform.rotation = transform.rotation; 
+
+        obj.SetActive(true);
+        return true;
     }
 
 

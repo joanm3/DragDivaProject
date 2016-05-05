@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class moveForward : MonoBehaviour
+[RequireComponent(typeof(Rigidbody))]
+public class BulletController : MonoBehaviour
 {
+    [SerializeField]
+    private float maxDistanceToDestroy = 150f; 
 
     [SerializeField]
     private float velocity = 0.1f;
@@ -10,22 +13,36 @@ public class moveForward : MonoBehaviour
     [SerializeField]
     private bool xAxis = true;
 
+    [SerializeField]
+    private bool bDebug = false; 
+
     private float direction = 1;
     private Rigidbody rg;
+    private GameObject player; 
 
     void Start()
     {
         rg = GetComponent<Rigidbody>();
-        //  if (xAxis)
-        //     rg.AddRelativeForce(Vector3.right * velocity, ForceMode.Impulse); 
-        //   else
-        //       rg.AddRelativeForce(Vector3.forward * velocity, ForceMode.Impulse);
+        player = GameObject.FindGameObjectWithTag("Player");
+        if (player == null)
+            Debug.Log("Player couldnt be found for" + name); 
+
+    }
+
+    void OnEnable()
+    {
 
 
     }
 
+    void Update()
+    {
+        float distanceFromPlayer = Vector3.Distance(player.transform.position, transform.position);
+        if (player != null && distanceFromPlayer >= maxDistanceToDestroy)
+            Destroy(); 
 
-    // Update is called once per frame
+    }
+
     void LateUpdate()
     {
 
@@ -33,15 +50,25 @@ public class moveForward : MonoBehaviour
             transform.Translate(Vector3.right * velocity);
         else
             transform.Translate(Vector3.forward * velocity);
-
-
     }
-
 
     void OnTriggerEnter(Collider collider)
     {
         Debug.Log("Collision Entered");
+        OnMirrorTriggerEnter(collider);
+        OnEnemyTriggerEnter(collider); 
+        
+    }
 
+
+    public void Destroy()
+    {
+        gameObject.layer = LayerMask.NameToLayer("World");
+        gameObject.SetActive(false);
+    }
+
+    private void OnMirrorTriggerEnter(Collider collider)
+    {
         if (collider.gameObject.layer == LayerMask.NameToLayer("Projection") || collider.gameObject.tag == "Mirror")
         {
             if (gameObject.layer == LayerMask.NameToLayer("World"))
@@ -49,6 +76,7 @@ public class moveForward : MonoBehaviour
             else if (gameObject.layer == LayerMask.NameToLayer("Mirror"))
                 gameObject.layer = LayerMask.NameToLayer("World");
 
+            if(bDebug)
             Debug.Log("layer Projection Entered");
 
             Vector3 normal = Vector3.zero;
@@ -68,10 +96,24 @@ public class moveForward : MonoBehaviour
                 }
                 else
                     transform.forward = Vector3.Reflect(transform.forward, normal) * Vector3.Magnitude(transform.forward);
-
+                if(bDebug)
                 Debug.Log(normal);
             }
         }
     }
+
+    private void OnEnemyTriggerEnter(Collider collider)
+    {
+        if (collider.gameObject.tag == "Enemy")
+        {
+
+            //Code to hurt the enemy
+
+            Destroy(); 
+
+        }
+
+    }
+
 
 }
