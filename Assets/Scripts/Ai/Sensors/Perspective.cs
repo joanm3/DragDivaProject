@@ -9,7 +9,8 @@ public class Perspective : Sense
 
     private Transform playerTrans;
     private Vector3 rayDirection;
-    internal Animator animator; 
+    internal Animator animator;
+    Vector3 playerPosition; 
 
 
 
@@ -26,14 +27,15 @@ public class Perspective : Sense
     {
         elapsedTime += Time.deltaTime;
 
-        if (elapsedTime >= detectionRate)
+       // if (elapsedTime >= detectionRate)
             DetectAspect();
     }
 
     //Detect perspective field of view for the AI Character
     void DetectAspect()
     {
-        Vector3 playerPosition = GameObject.FindGameObjectWithTag("Player").transform.position; 
+        GameObject player = GameObject.FindGameObjectWithTag("Player"); 
+        playerPosition = player.transform.position; 
         RaycastHit hit;
         rayDirection = playerPosition - transform.position;
 
@@ -87,7 +89,7 @@ public class Perspective : Sense
         //Vector3 rightRayPoint = frontRayPoint;
         // rightRayPoint.x -= FieldOfView * 0.5f;
 
-        Gizmos.DrawSphere(playerTrans.position, 1f); 
+        Gizmos.DrawSphere(playerPosition, 1f); 
         Debug.DrawLine(transform.position, frontRayPoint, Color.red);
         Debug.DrawLine(transform.position, leftRayPoint, Color.green);
         Debug.DrawLine(transform.position, rightRayPoint, Color.blue);
