@@ -12,6 +12,15 @@ public class ProbeOptimization : MonoBehaviour
     [SerializeField]
     private float m_mediumResolutionStartDistance = 40f;
 
+    [SerializeField]
+    private int m_maxResolution = 2048;
+
+    [SerializeField]
+    private int m_mediumResolution = 1024;
+
+    [SerializeField]
+    private int m_minResolution = 512; 
+
 
     private ReflectionProbe m_rProbe;
     private float m_forWaitForSecFloat;
@@ -41,15 +50,15 @@ public class ProbeOptimization : MonoBehaviour
             if(distanceFromPlayer < m_maxResolutionStartDistance)
             {
 
-                m_rProbe.resolution = 1024; 
+                m_rProbe.resolution = m_maxResolution; 
 
             } else if (distanceFromPlayer > m_maxResolutionStartDistance && distanceFromPlayer < m_mediumResolutionStartDistance)
             {
-                m_rProbe.resolution = 512 ;
+                m_rProbe.resolution = m_mediumResolution ;
             }
             else
             {
-                m_rProbe.resolution = 256 ;
+                m_rProbe.resolution = m_minResolution ;
 
             }
 

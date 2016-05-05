@@ -121,8 +121,10 @@ public class PlayerControl : MonoBehaviour
 			anim.SetBool(jumpBool, true);
 			if(speed > 0 && timeToNextJump <= 0 && !aim)
 			{
-				GetComponent<Rigidbody>().velocity = new Vector3(0, jumpHeight, 0);
-				timeToNextJump = jumpCooldown;
+                //GetComponent<Rigidbody>().velocity = new Vector3(0, jumpHeight, 0);
+                GetComponent<Rigidbody>().AddForce(new Vector3(0, jumpHeight, 0),ForceMode.Impulse) ;
+
+                timeToNextJump = jumpCooldown;
 			}
 		}
 	}

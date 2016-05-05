@@ -108,7 +108,7 @@ public class BulletController : MonoBehaviour
         {
 
             //Code to hurt the enemy
-
+            Debug.Log("enemy touched"); 
             Destroy(); 
 
         }
