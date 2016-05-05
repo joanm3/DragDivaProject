@@ -15,13 +15,18 @@ public class GameOverBehaviour : StateMachineBehaviour {
         wanders = GameObject.FindGameObjectsWithTag("Enemy");
         thisWander = animator.gameObject.GetComponent<Wander>(); 
         restartPlayer = GameObject.FindGameObjectWithTag("Player").GetComponent<RestartPosition>();
-     //   redScreen = GameObject.FindGameObjectWithTag("GameOver"); 
+        //   redScreen = GameObject.FindGameObjectWithTag("GameOver"); 
 
-     //   restartPlayer.ResetPosition();
-        foreach (GameObject wander in wanders)
+           restartPlayer.ResetPosition();
+
+        if (wanders != null)
         {
-            RestartPosition restartWander = wander.GetComponent<RestartPosition>();
-        //    restartWander.ResetPosition(); 
+            foreach (GameObject wander in wanders)
+            {
+                RestartPosition restartWander = wander.GetComponent<RestartPosition>();
+                if(restartWander != null)
+                restartWander.ResetPosition();
+            }
         }
 
 

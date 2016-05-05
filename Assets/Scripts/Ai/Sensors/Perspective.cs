@@ -33,8 +33,9 @@ public class Perspective : Sense
     //Detect perspective field of view for the AI Character
     void DetectAspect()
     {
+        Vector3 playerPosition = GameObject.FindGameObjectWithTag("Player").transform.position; 
         RaycastHit hit;
-        rayDirection = playerTrans.position - transform.position;
+        rayDirection = playerPosition - transform.position;
 
         if ((Vector3.Angle(rayDirection, transform.forward)) < fieldOfView)
         {
@@ -82,10 +83,11 @@ public class Perspective : Sense
         //leftRayPoint.x += FieldOfView * 0.5f;
 
         Vector3 leftRayPoint = transform.position + (leftRayDirection * viewDistance);
-        Vector3 rightRayPoint = transform.position + (rightRayDirection * viewDistance); 
+        Vector3 rightRayPoint = transform.position + (rightRayDirection * viewDistance);
         //Vector3 rightRayPoint = frontRayPoint;
-       // rightRayPoint.x -= FieldOfView * 0.5f;
+        // rightRayPoint.x -= FieldOfView * 0.5f;
 
+        Gizmos.DrawSphere(playerTrans.position, 1f); 
         Debug.DrawLine(transform.position, frontRayPoint, Color.red);
         Debug.DrawLine(transform.position, leftRayPoint, Color.green);
         Debug.DrawLine(transform.position, rightRayPoint, Color.blue);

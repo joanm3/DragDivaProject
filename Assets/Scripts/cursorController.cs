@@ -9,7 +9,7 @@ public class cursorController : MonoBehaviour {
     void Start()
     {
         if (!bdebug)
-            Screen.lockCursor = true;
+            Cursor.visible = true;
     }
 
 
@@ -21,8 +21,8 @@ public class cursorController : MonoBehaviour {
         }
 
         if (!bdebug)
-            Screen.lockCursor = true;
+            Cursor.visible = true;
         else
-            Screen.lockCursor = false;
+            Cursor.visible = false;
     }
 }

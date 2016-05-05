@@ -16,13 +16,10 @@ public class BulletController : MonoBehaviour
     [SerializeField]
     private bool bDebug = false; 
 
-    private float direction = 1;
-    private Rigidbody rg;
     private GameObject player; 
 
     void Start()
     {
-        rg = GetComponent<Rigidbody>();
         player = GameObject.FindGameObjectWithTag("Player");
         if (player == null)
             Debug.Log("Player couldnt be found for" + name); 

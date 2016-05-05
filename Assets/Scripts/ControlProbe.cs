@@ -51,9 +51,9 @@ public class ControlProbe : MonoBehaviour
         Vector3 projectionPlane = Formulas.ProjectPointOnPlane(m_playerCamera.transform.position, plane);
         m_symmetricPoint = projectionPlane - (m_playerCamera.transform.position - projectionPlane);
         transform.position = new Vector3(m_symmetricPoint.x, m_symmetricPoint.y + m_yOffset, m_symmetricPoint.z);
-        Vector3 cameraDirection = m_playerCamera.transform.forward;
-        float scalarProduct = Vector3.Dot(Normal, cameraDirection);
-        Vector3 mirroredDirection = cameraDirection - (2 * scalarProduct * Normal.normalized);
+       // Vector3 cameraDirection = m_playerCamera.transform.forward;
+       // float scalarProduct = Vector3.Dot(Normal, cameraDirection);
+       // Vector3 mirroredDirection = cameraDirection - (2 * scalarProduct * Normal.normalized);
         // transform.LookAt(transform.position + mirroredDirection);
 
 

@@ -38,7 +38,8 @@ public class Wander : MonoBehaviour {
     #endregion
 
     #region AUDIOCLIPS
-    internal AudioSource audio;
+    //internal new AudioSource audio;
+    internal AudioSource m_audio;
     public AudioClip soundHeard;
     public AudioClip playerDetected;
     private Vector3 lastPosition;
@@ -65,7 +66,7 @@ public class Wander : MonoBehaviour {
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
-        audio = GetComponent<AudioSource>(); 
+        m_audio = GetComponent<AudioSource>(); 
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         countdown = GameObject.FindGameObjectWithTag("Timer").GetComponent<CountdownTimer>();
         if (!countdown)

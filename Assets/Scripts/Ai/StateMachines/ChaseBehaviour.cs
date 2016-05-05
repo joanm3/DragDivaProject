@@ -10,8 +10,8 @@ public class ChaseBehaviour : StateMachineBehaviour {
         wander = animator.gameObject.GetComponent<Wander>();
         wander.isChasing = true;
         wander.agent.speed = wander.chaseSpeed;
-        wander.audio.clip = wander.playerDetected;
-        wander.audio.Play();
+        wander.m_audio.clip = wander.playerDetected;
+        wander.m_audio.Play();
         animator.SetBool("finishedTime", false); 
     }
 

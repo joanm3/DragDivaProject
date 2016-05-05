@@ -97,7 +97,6 @@ public class ObjectController : MonoBehaviour
             childObject.transform.localScale = Vector3.one;
             childObject.tag = ObjectController.tagName;
             // childObject.name = name + "Window"; 
-            MeshRenderer mr = childObject.AddComponent<MeshRenderer>();
             ObjectController oc = childObject.AddComponent<ObjectController>();
             oc.thisType = type;
             oc.m_standardMaterial = m_standardMaterial;
