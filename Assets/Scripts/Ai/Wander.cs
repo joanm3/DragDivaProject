@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class Wander : MonoBehaviour {
 
@@ -9,6 +10,9 @@ public class Wander : MonoBehaviour {
     public Paths patrollingPath;
     //debug mode
     public bool bDebug = true;
+    [SerializeField]
+    private float fireRate = 1f;
+    private float nextFire;
     #endregion
 
 
@@ -17,7 +21,9 @@ public class Wander : MonoBehaviour {
     public Perspective perspective;
     public Touch touch;
     public bool isChasing = false;
-    #endregion  
+    public ObjectPoolScript enemyBulletsPool;
+
+    #endregion
 
     #region ANIMATOR COMPONENTS
     //navmeshagent and animator loads
@@ -131,6 +137,33 @@ public class Wander : MonoBehaviour {
 
     }
 
+
+    internal bool Shoot()
+    {
+
+        if (Time.time > nextFire)
+        {
+            nextFire = Time.time + fireRate;
+
+
+        transform.LookAt(playerTransform);
+
+        GameObject obj = enemyBulletsPool.GetPooledObject();
+        if (obj == null)
+            return false;
+
+        obj.transform.position = transform.position;
+        obj.transform.rotation = transform.rotation;
+        BulletController bc = obj.GetComponent<BulletController>();
+        if (bc != null)
+            bc.shooterTransform = this.transform;
+
+        obj.SetActive(true);
+        return true;
+        }
+        return false; 
+    }
+
     void OnDrawGizmos()
     {
         if (!bDebug) return;
@@ -138,6 +171,7 @@ public class Wander : MonoBehaviour {
         Gizmos.color = Color.grey; 
         //playerlastseenposition; 
         Gizmos.color = Color.magenta;
+      //  Gizmos.DrawSphere(playerTransform.position, 1f); 
         Gizmos.DrawWireSphere(playerLastSeen, 3);
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(randomSearchDest, 3);

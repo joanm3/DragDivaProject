@@ -4,8 +4,19 @@ using System.Collections;
 [RequireComponent(typeof(Rigidbody))]
 public class BulletController : MonoBehaviour
 {
+    public enum BulletType
+    {
+        player, enemy
+    }
+
+    [HideInInspector]
+    public Transform shooterTransform;
+
     [SerializeField]
-    private float maxDistanceToDestroy = 150f; 
+    private BulletType thisType;
+
+    [SerializeField]
+    private float maxDistanceToDestroy = 150f;
 
     [SerializeField]
     private float velocity = 0.1f;
@@ -14,35 +25,47 @@ public class BulletController : MonoBehaviour
     private bool xAxis = true;
 
     [SerializeField]
-    private bool bDebug = false; 
+    private bool bDebug = false;
 
-    private GameObject player; 
+    private GameObject player;
 
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
         if (player == null)
-            Debug.Log("Player couldnt be found for" + name); 
+            Debug.Log("Player couldnt be found for" + name);
 
     }
 
     void OnEnable()
     {
-
-
+        gameObject.layer = LayerMask.NameToLayer("World");
     }
 
     void Update()
     {
-        float distanceFromPlayer = Vector3.Distance(player.transform.position, transform.position);
-        if (player != null && distanceFromPlayer >= maxDistanceToDestroy)
-            Destroy(); 
-
+        if (thisType == BulletController.BulletType.player)
+        {
+            if (player != null)
+            {
+                float distanceFromPlayer = Vector3.Distance(player.transform.position, transform.position);
+                if (distanceFromPlayer >= maxDistanceToDestroy)
+                    Destroy();
+            }
+        }
+        else if (thisType == BulletController.BulletType.enemy)
+        {
+            if (shooterTransform != null)
+            {
+                float distanceFromEnemy = Vector3.Distance(shooterTransform.position, transform.position);
+                if (distanceFromEnemy >= maxDistanceToDestroy)
+                    Destroy();
+            }
+        }
     }
 
     void LateUpdate()
     {
-
         if (xAxis)
             transform.Translate(Vector3.right * velocity);
         else
@@ -53,8 +76,12 @@ public class BulletController : MonoBehaviour
     {
         Debug.Log("Collision Entered");
         OnMirrorTriggerEnter(collider);
-        OnEnemyTriggerEnter(collider); 
-        
+
+        if (thisType == BulletType.player)
+            OnEnemyTriggerEnter(collider);
+        else if (thisType == BulletType.enemy)
+            OnPlayerTriggerEnter(collider);
+
     }
 
 
@@ -73,8 +100,8 @@ public class BulletController : MonoBehaviour
             else if (gameObject.layer == LayerMask.NameToLayer("Mirror"))
                 gameObject.layer = LayerMask.NameToLayer("World");
 
-            if(bDebug)
-            Debug.Log("layer Projection Entered");
+            if (bDebug)
+                Debug.Log("layer Projection Entered");
 
             Vector3 normal = Vector3.zero;
             if (collider.gameObject.layer == LayerMask.NameToLayer("Projection"))
@@ -93,8 +120,8 @@ public class BulletController : MonoBehaviour
                 }
                 else
                     transform.forward = Vector3.Reflect(transform.forward, normal) * Vector3.Magnitude(transform.forward);
-                if(bDebug)
-                Debug.Log(normal);
+                if (bDebug)
+                    Debug.Log(normal);
             }
         }
     }
@@ -105,8 +132,21 @@ public class BulletController : MonoBehaviour
         {
 
             //Code to hurt the enemy
-            Debug.Log("enemy touched"); 
-            Destroy(); 
+            Debug.Log("enemy touched");
+            Destroy();
+
+        }
+
+    }
+
+    private void OnPlayerTriggerEnter(Collider collider)
+    {
+        if (collider.gameObject.tag == "Player")
+        {
+
+            //Code to hurt the enemy
+            Debug.Log("player touched");
+            Destroy();
 
         }
 

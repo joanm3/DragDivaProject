@@ -84,18 +84,4 @@ public class ProbeOptimization : MonoBehaviour
 
     }
 
-
-    void OnEnable()
-    {
-
-
-    }
-
-    void OnDisable()
-    {
-
-
-    }
-
-
 }

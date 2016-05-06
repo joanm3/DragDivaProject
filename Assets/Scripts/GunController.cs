@@ -38,7 +38,10 @@ public class GunController : MonoBehaviour {
             return false;
 
         obj.transform.position = transform.position;
-        obj.transform.rotation = transform.rotation; 
+        obj.transform.rotation = transform.rotation;
+        BulletController bc = obj.GetComponent<BulletController>();
+        if(bc != null)
+        bc.shooterTransform = this.transform; 
 
         obj.SetActive(true);
         return true;
