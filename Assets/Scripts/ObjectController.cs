@@ -22,7 +22,7 @@ public class ObjectController : MonoBehaviour
     [SerializeField]
     internal bool m_static;
 
-	public bool isVeiled = true;
+	public bool isVeiled = false;
 	public bool startVisible;
     public bool isDraggable;
 

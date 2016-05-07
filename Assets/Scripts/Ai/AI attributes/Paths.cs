@@ -5,7 +5,6 @@ using System;
 public class Paths : MonoBehaviour {
 
     public bool bDebug = true;
-    public float Radius = 2.0f;
     public GameObject[] objectPointA;
    
 
