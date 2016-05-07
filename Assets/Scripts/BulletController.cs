@@ -82,9 +82,10 @@ public class BulletController : MonoBehaviour
 
     void OnTriggerEnter(Collider collider)
     {
-        if (bDebug) ;
+        if (bDebug) 
         Debug.Log("Bullet Collision Entered");
         OnMirrorTriggerEnter(collider);
+        OnMecanismTriggerEnter(collider); 
 
         if (m_thisType == BulletType.player)
             OnEnemyTriggerEnter(collider);
@@ -169,6 +170,14 @@ public class BulletController : MonoBehaviour
 
         }
 
+    }
+
+    private void OnMecanismTriggerEnter(Collider collider)
+    {
+        if (collider.gameObject.tag == "Mecanism")
+        {
+            Destroy();
+        }
     }
 
 

@@ -3,6 +3,9 @@ using System.Collections;
 
 public class GrabbObject : MonoBehaviour {
 
+    [SerializeField]
+    Color grabbColor; 
+
     private bool m_isGrabbing = false;
     private Transform m_objectToGrabb; 
 
@@ -25,6 +28,8 @@ public class GrabbObject : MonoBehaviour {
 
 
         m_objectToGrabb = other.gameObject.transform;
+        Material material = m_objectToGrabb.GetComponent<MeshRenderer>().material;
+        material.color = grabbColor; 
         Debug.Log("Object to dragg is " + m_objectToGrabb); 
 
     }
@@ -37,7 +42,8 @@ public class GrabbObject : MonoBehaviour {
             return;
         if (oc.isDraggable == false)
             return;
-
+        Material material = m_objectToGrabb.GetComponent<MeshRenderer>().material;
+        material.color = Color.white;
         m_objectToGrabb = null;
         Debug.Log("Object to dragg is " + m_objectToGrabb);
 
