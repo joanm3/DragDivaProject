@@ -22,28 +22,20 @@ public class ActivationMecanism : MonoBehaviour
     private Transform[] m_objectsToActivate;
 
     private Material m_material;
-
     private bool m_playerTouching = false;
     private bool m_activatorTouching = false;
-    private bool m_bulletTouching;
-
     private bool m_activated = false;
 
 
-    // Use this for initialization
     void Start()
     {
+        if(m_activator != null)
+            m_material = m_activator.GetComponent<MeshRenderer>().material;
+        else
+            m_material = GetComponent<MeshRenderer>().material;
 
-        m_material = m_activator.GetComponent<MeshRenderer>().material;
         m_material.color = m_desactivatedColor;
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
 
     void OnTriggerEnter(Collider collider)
     {
@@ -53,29 +45,30 @@ public class ActivationMecanism : MonoBehaviour
         if (collider.gameObject.tag == "Activator")
             m_activatorTouching = true;
 
-        if (collider.gameObject.tag == "Bullet")
-            m_bulletTouching = true;
 
-
-        if (m_activateWithBullet && !m_activated)
+        if (m_activateWithBullet)
         {
-            m_material.color = m_activatedColor;
-            foreach (Transform objectToActivate in m_objectsToActivate)
+            if (!m_activated)
             {
-                m_activated = true;
-                objectToActivate.gameObject.SetActive(false);
+                m_material.color = m_activatedColor;
+                foreach (Transform objectToActivate in m_objectsToActivate)
+                {
+                    m_activated = true;
+                    objectToActivate.gameObject.SetActive(false);
+                }
+            }
+            else
+            {
+                m_material.color = m_desactivatedColor;
+                foreach (Transform objectToActivate in m_objectsToActivate)
+                {
+                    m_activated = false;
+                    objectToActivate.gameObject.SetActive(true);
 
+                }
             }
         }
-        else if (m_activateWithBullet && m_activated)
-        {
-            m_material.color = m_desactivatedColor;
-            foreach (Transform objectToActivate in m_objectsToActivate)
-            {
-                m_activated = false;
-                objectToActivate.gameObject.SetActive(true);
 
-            }
 
             if (m_activateWithBullet)
                 return;
@@ -91,14 +84,9 @@ public class ActivationMecanism : MonoBehaviour
 
                 }
             }
-
-
-
         }
-    }
 
-
-        void OnTriggerExit(Collider collider)
+    void OnTriggerExit(Collider collider)
     {
             if (m_stayActive || m_activateWithBullet)
                 return;
@@ -110,7 +98,7 @@ public class ActivationMecanism : MonoBehaviour
                 m_activatorTouching = false;
 
 
-            if (!m_activatorTouching && !m_playerTouching || !m_bulletTouching && m_activateWithBullet)
+            if (!m_activatorTouching && !m_playerTouching)
             {
                 m_material.color = m_desactivatedColor;
                 foreach (Transform objectToActivate in m_objectsToActivate)

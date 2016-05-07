@@ -4,7 +4,9 @@ using System.Collections;
 public class GrabbObject : MonoBehaviour {
 
     [SerializeField]
-    Color grabbColor; 
+    Color grabbColor;
+    [SerializeField]
+    private bool bDebug = false; 
 
     private bool m_isGrabbing = false;
     private Transform m_objectToGrabb; 
@@ -29,7 +31,8 @@ public class GrabbObject : MonoBehaviour {
 
         m_objectToGrabb = other.gameObject.transform;
         Material material = m_objectToGrabb.GetComponent<MeshRenderer>().material;
-        material.color = grabbColor; 
+        material.color = grabbColor;
+        if(bDebug)
         Debug.Log("Object to dragg is " + m_objectToGrabb); 
 
     }
@@ -45,22 +48,25 @@ public class GrabbObject : MonoBehaviour {
         Material material = m_objectToGrabb.GetComponent<MeshRenderer>().material;
         material.color = Color.white;
         m_objectToGrabb = null;
-        Debug.Log("Object to dragg is " + m_objectToGrabb);
+        if (bDebug)
+            Debug.Log("Object to dragg is " + m_objectToGrabb);
 
     }
 
     void Update()
     {
-
-        Debug.Log("isGrabbing = " + m_isGrabbing); 
+        if (bDebug)
+            Debug.Log( name + " isGrabbing = " + m_isGrabbing); 
 
         if (m_objectToGrabb == null)
             return;
 
         if(!m_isGrabbing && Input.GetButtonDown("Grabb"))
         {
-            Debug.Log("Grabb button touched"); 
+
             m_objectToGrabb.SetParent(this.transform);
+            m_objectToGrabb.transform.position = this.transform.position;
+
            // m_objectToGrabb.SetParent(GameObject.FindGameObjectWithTag("MainCamera").transform);
             m_isGrabbing = true; 
         }
@@ -69,6 +75,7 @@ public class GrabbObject : MonoBehaviour {
         {
            // Debug.Log("Grabb button touched");
             m_objectToGrabb.parent = null;
+
             m_isGrabbing = false;
 
         }
