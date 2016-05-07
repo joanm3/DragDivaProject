@@ -3,6 +3,8 @@ using System.Collections;
 
 public class FollowPath : MonoBehaviour {
 
+    //https://cgcookie.com/archive/noob-to-pro-shader-writing-for-unity-4-beginner/ shaders unity
+
     [SerializeField]
     private Paths path;
     [SerializeField]
@@ -20,6 +22,8 @@ public class FollowPath : MonoBehaviour {
         transform.Translate(Vector3.forward * speed * Time.deltaTime);
         if (distanceFromWayPoint < distanceToChange)
         {
+
+
             if (currentWaypoint >= path.getLength() - 1)
                 currentWaypoint = 0;
             else
