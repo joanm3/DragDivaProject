@@ -45,14 +45,14 @@ public class SearchNextComputer : FindingNewTargetBehaviour
 
         Vector3 newDest = position + vector;
         newDest.y = position.y;
-        wander.randomSearchDest = newDest;
+        wander.m_randomSearchDest = newDest;
 
         if (Physics.Raycast(position, vector, vector.magnitude, 1 << LayerMask.NameToLayer("Wall")))
         {
             randomAngle = UnityEngine.Random.Range(-180, 180);
             vector = Quaternion.Euler(0, randomAngle, 0) * forward * distanceNextPoint;
             newDest = position + vector;
-            wander.randomSearchDest = newDest;
+            wander.m_randomSearchDest = newDest;
         }
 
         return newDest;

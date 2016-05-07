@@ -13,7 +13,6 @@ public class HealthbarScript : MonoBehaviour {
 	void Start () {
         healthbarFilling = this.GetComponent<Image>();
         health = maxHealth;
-
 	
 	}
 

@@ -12,10 +12,10 @@ public class ActivationMecanism : MonoBehaviour {
     private bool m_stayActive;
 
     [SerializeField]
-    private Transform activator;
+    private Transform m_activator;
 
     [SerializeField]
-    private Transform[] objectsToActivate; 
+    private Transform[] m_objectsToActivate; 
 
     private Material m_material;
 
@@ -26,7 +26,7 @@ public class ActivationMecanism : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-        m_material = activator.GetComponent<MeshRenderer>().material;
+        m_material = m_activator.GetComponent<MeshRenderer>().material;
         m_material.color = m_desactivatedColor; 
 
 	
@@ -49,7 +49,7 @@ public class ActivationMecanism : MonoBehaviour {
         if (m_playerTouching || m_activatorTouching)
         {
             m_material.color = m_activatedColor;
-            foreach (Transform objectToActivate in objectsToActivate)
+            foreach (Transform objectToActivate in m_objectsToActivate)
             {
                 objectToActivate.gameObject.SetActive(false);
 
@@ -72,7 +72,7 @@ public class ActivationMecanism : MonoBehaviour {
         if (!m_activatorTouching && !m_playerTouching)
         {
             m_material.color = m_desactivatedColor;
-            foreach (Transform objectToActivate in objectsToActivate)
+            foreach (Transform objectToActivate in m_objectsToActivate)
             {
                 objectToActivate.gameObject.SetActive(true);
 

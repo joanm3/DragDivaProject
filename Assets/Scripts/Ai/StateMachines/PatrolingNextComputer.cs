@@ -9,8 +9,8 @@ public class PatrolingNextComputer : FindingNewTargetBehaviour
     {
 
         Wander wander = animator.gameObject.GetComponent<Wander>();
-        Paths path = wander.patrollingPath;
-        int nextIndex = wander.currentPatrollingIndex+1;
+        Path path = wander.patrollingPath;
+        int nextIndex = wander.m_currentPatrollingIndex+1;
         if (nextIndex >= path.getLength())
         {
             nextIndex = 0;
@@ -18,11 +18,11 @@ public class PatrolingNextComputer : FindingNewTargetBehaviour
         if (!PathExists(path, animator.gameObject))
             return new Vector3(0, 0, 0);
         Vector3 vector3 = path.ObjectGetPosition(nextIndex);
-        wander.currentPatrollingIndex = nextIndex;
+        wander.m_currentPatrollingIndex = nextIndex;
         return vector3;
     }
 
-    private bool PathExists(Paths path, GameObject gameObject)
+    private bool PathExists(Path path, GameObject gameObject)
     {
         if (path == null)
         {

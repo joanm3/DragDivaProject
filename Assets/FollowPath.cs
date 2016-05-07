@@ -6,28 +6,28 @@ public class FollowPath : MonoBehaviour {
     //https://cgcookie.com/archive/noob-to-pro-shader-writing-for-unity-4-beginner/ shaders unity
 
     [SerializeField]
-    private Paths path;
+    private Path m_path;
     [SerializeField]
-    private float speed = 1f; 
+    private float m_speed = 1f; 
     [SerializeField]
-    private float distanceToChange = 1f;
-    private int currentWaypoint = 0; 
+    private float m_distanceToChange = 1f;
+    private int m_currentWaypoint = 0; 
 
 
 	void Update () {
 
 
-        float distanceFromWayPoint = Vector3.Distance(path.ObjectGetPosition(currentWaypoint), transform.position);
-        transform.LookAt(path.ObjectGetPosition(currentWaypoint));
-        transform.Translate(Vector3.forward * speed * Time.deltaTime);
-        if (distanceFromWayPoint < distanceToChange)
+        float distanceFromWayPoint = Vector3.Distance(m_path.ObjectGetPosition(m_currentWaypoint), transform.position);
+        transform.LookAt(m_path.ObjectGetPosition(m_currentWaypoint));
+        transform.Translate(Vector3.forward * m_speed * Time.deltaTime);
+        if (distanceFromWayPoint < m_distanceToChange)
         {
 
 
-            if (currentWaypoint >= path.getLength() - 1)
-                currentWaypoint = 0;
+            if (m_currentWaypoint >= m_path.getLength() - 1)
+                m_currentWaypoint = 0;
             else
-                currentWaypoint++; 
+                m_currentWaypoint++; 
         } 
 
 

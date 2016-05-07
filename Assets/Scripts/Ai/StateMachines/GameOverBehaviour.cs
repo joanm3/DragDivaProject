@@ -30,7 +30,7 @@ public class GameOverBehaviour : StateMachineBehaviour {
         }
 
 
-        thisWander.countdown.ResetTimer(0);
+        thisWander.m_countdown.ResetTimer(0);
 
 
     }

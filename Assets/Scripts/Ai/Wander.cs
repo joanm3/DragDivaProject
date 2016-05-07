@@ -7,12 +7,14 @@ public class Wander : MonoBehaviour {
     #region STANDARD PARAMETERS
     public float movementSpeed = 5;
     public float chaseSpeed = 7;
-    public Paths patrollingPath;
+    public Path patrollingPath;
+    [SerializeField]
+    private float m_health = 100f; 
     //debug mode
     public bool bDebug = true;
     [SerializeField]
-    private float fireRate = 1f;
-    private float nextFire;
+    private float m_fireRate = 1f;
+    private float m_nextFire;
     #endregion
 
 
@@ -27,40 +29,38 @@ public class Wander : MonoBehaviour {
 
     #region ANIMATOR COMPONENTS
     //navmeshagent and animator loads
-    internal NavMeshAgent agent;
-    private Animator animator;
-    internal Transform playerTransform;
+    internal NavMeshAgent m_agent;
+    private Animator m_animator;
+    internal Transform m_playerTransform;
     //positionofplayerlastseen 
-    internal int currentPatrollingIndex = 0;
-    internal Vector3 playerLastSeen = new Vector3(100,100,100);
-    internal Vector3 randomSearchDest = new Vector3(100, 100, 100);
-    private float distanceFromPlayer = 100;
-    private float distanceFromPlayerLastSeen = 100;
+    internal int m_currentPatrollingIndex = 0;
+    internal Vector3 m_playerLastSeen = new Vector3(100,100,100);
+    internal Vector3 m_randomSearchDest = new Vector3(100, 100, 100);
+    private float m_distanceFromPlayer = 100;
+    private float m_distanceFromPlayerLastSeen = 100;
     //time remaining to stop looking; 
-    internal CountdownTimer countdown;
+    internal CountdownTimer m_countdown;
     //restart Perspective
-    private int startFieldOfView;
-    private int startViewDistance;
+    private int m_startFieldOfView;
+    private int m_startViewDistance;
     #endregion
 
     #region AUDIOCLIPS
-    //internal new AudioSource audio;
     internal AudioSource m_audio;
     public AudioClip soundHeard;
     public AudioClip playerDetected;
-    private Vector3 lastPosition;
-    private float lastTime;
-    private float timeSinceLastMovement;
-
+    private Vector3 m_lastPosition;
+    private float m_lastTime;
+    private float m_timeSinceLastMovement;
     #endregion
 
 
     void Start()
     {
         WanderGetComponents(); 
-        agent.speed = movementSpeed;
-        lastPosition = transform.position;
-        lastTime = Time.time;
+        m_agent.speed = movementSpeed;
+        m_lastPosition = transform.position;
+        m_lastTime = Time.time;
     }
 
     void Update()
@@ -70,83 +70,100 @@ public class Wander : MonoBehaviour {
 
     void WanderGetComponents()
     {
-        agent = GetComponent<NavMeshAgent>();
-        animator = GetComponent<Animator>();
+        m_agent = GetComponent<NavMeshAgent>();
+        m_animator = GetComponent<Animator>();
         m_audio = GetComponent<AudioSource>(); 
-        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
-        countdown = GameObject.FindGameObjectWithTag("Timer").GetComponent<CountdownTimer>();
-        if (!countdown)
+        m_playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+        m_countdown = GameObject.FindGameObjectWithTag("Timer").GetComponent<CountdownTimer>();
+        if (!m_countdown)
             Debug.Log("No CountdownTimer component found for" + gameObject);
 
-        startFieldOfView = perspective.fieldOfView;
-        startViewDistance = perspective.viewDistance;
+        m_startFieldOfView = perspective.fieldOfView;
+        m_startViewDistance = perspective.viewDistance;
 }
 
 
     public void RestartPerspective()
     {
-        perspective.fieldOfView = startFieldOfView;
-        perspective.viewDistance = startViewDistance;
+        perspective.fieldOfView = m_startFieldOfView;
+        perspective.viewDistance = m_startViewDistance;
     }
 
     void UpdateAnimator()
     {
         float timeOfUpdate = Time.time;
 
-        animator.SetBool("viewingTarget", perspective.tarViewed);
-        animator.SetBool("touchingTarget", touch.tarTouched);
-        distanceFromPlayer = Vector3.Distance(playerTransform.position, transform.position);
-        animator.SetFloat("distanceFromPlayer", distanceFromPlayer);
-        float distanceFromWayPoint = Vector3.Distance(patrollingPath.ObjectGetPosition(currentPatrollingIndex), transform.position);
-        animator.SetFloat("distanceFromWaypoint", distanceFromWayPoint);
-        if (playerLastSeen != null)
+        m_animator.SetBool("viewingTarget", perspective.tarViewed);
+        m_animator.SetBool("touchingTarget", touch.tarTouched);
+        m_distanceFromPlayer = Vector3.Distance(m_playerTransform.position, transform.position);
+        m_animator.SetFloat("distanceFromPlayer", m_distanceFromPlayer);
+        float distanceFromWayPoint = Vector3.Distance(patrollingPath.ObjectGetPosition(m_currentPatrollingIndex), transform.position);
+        m_animator.SetFloat("distanceFromWaypoint", distanceFromWayPoint);
+        if (m_playerLastSeen != null)
         {
-            distanceFromPlayerLastSeen = Vector3.Distance(playerLastSeen, transform.position);
-            animator.SetFloat("distanceFromLastPlayerSeen", distanceFromPlayerLastSeen);
+            m_distanceFromPlayerLastSeen = Vector3.Distance(m_playerLastSeen, transform.position);
+            m_animator.SetFloat("distanceFromLastPlayerSeen", m_distanceFromPlayerLastSeen);
         }
 
-        if (randomSearchDest != null)
+        if (m_randomSearchDest != null)
         {
-            float distanceFromSearchRandom = Vector3.Distance(randomSearchDest, transform.position);
-            animator.SetFloat("distanceFromSearchDest", distanceFromSearchRandom);
+            float distanceFromSearchRandom = Vector3.Distance(m_randomSearchDest, transform.position);
+            m_animator.SetFloat("distanceFromSearchDest", distanceFromSearchRandom);
         }
 
         float distanceFromSound = Vector3.Distance(touch.soundPosition, transform.position);
-        animator.SetFloat("distanceFromSound", distanceFromSound);
+        m_animator.SetFloat("distanceFromSound", distanceFromSound);
 
-        float deltaTime = timeOfUpdate - lastTime;
-        float velocity = Vector3.Magnitude(transform.position - lastPosition) / deltaTime;
-        animator.SetFloat("velocity", velocity); 
+        float deltaTime = timeOfUpdate - m_lastTime;
+        float velocity = Vector3.Magnitude(transform.position - m_lastPosition) / deltaTime;
+        m_animator.SetFloat("velocity", velocity); 
 
         if (velocity>0.1)
         {
-            timeSinceLastMovement = 0.0f;
+            m_timeSinceLastMovement = 0.0f;
         } else {
-            timeSinceLastMovement += deltaTime;
+            m_timeSinceLastMovement += deltaTime;
         }
 
-        if (timeSinceLastMovement > 5.0f)
+        if (m_timeSinceLastMovement > 5.0f)
         {
-            animator.SetTrigger("WanderStagnating");
+            m_animator.SetTrigger("WanderStagnating");
         }
 
 
-        lastPosition = transform.position;
-        lastTime = timeOfUpdate;
+        m_lastPosition = transform.position;
+        m_lastTime = timeOfUpdate;
         
 
     }
 
+    public bool RemoveEnemyHealth(float value)
+    {
+        m_health -= value;
+        Material material = GetComponentInChildren<SkinnedMeshRenderer>().material;
+        float red = material.color.r;
+        red += value;
+        material.color = new Color(red, material.color.g, material.color.b); 
+
+        if(bDebug)
+        Debug.Log("enemy life attacked = " + m_health);
+        if (m_health <= 0)
+        {
+            m_health = 0;
+            return true;
+        }
+        return false;
+    }
 
     internal bool Shoot()
     {
 
-        if (Time.time > nextFire)
+        if (Time.time > m_nextFire)
         {
-            nextFire = Time.time + fireRate;
+            m_nextFire = Time.time + m_fireRate;
 
 
-        transform.LookAt(playerTransform);
+        transform.LookAt(m_playerTransform);
 
         GameObject obj = enemyBulletsPool.GetPooledObject();
         if (obj == null)
@@ -172,9 +189,9 @@ public class Wander : MonoBehaviour {
         //playerlastseenposition; 
         Gizmos.color = Color.magenta;
       //  Gizmos.DrawSphere(playerTransform.position, 1f); 
-        Gizmos.DrawWireSphere(playerLastSeen, 3);
+        Gizmos.DrawWireSphere(m_playerLastSeen, 3);
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(randomSearchDest, 3);
+        Gizmos.DrawWireSphere(m_randomSearchDest, 3);
     }
 
 

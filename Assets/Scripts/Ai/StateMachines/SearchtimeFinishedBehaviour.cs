@@ -13,9 +13,9 @@ public class SearchtimeFinishedBehaviour : StateMachineBehaviour {
     {
         Wander wander;
         wander = animator.gameObject.GetComponent<Wander>();
-        if (wander.countdown.GetFractionSecondsRemaining() > 5)
+        if (wander.m_countdown.GetFractionSecondsRemaining() > 5)
             timeWasTriggered = false; 
-        if (wander.countdown.GetFractionSecondsRemaining() <= 0.01 && !timeWasTriggered)
+        if (wander.m_countdown.GetFractionSecondsRemaining() <= 0.01 && !timeWasTriggered)
         {
             animator.SetTrigger("timeFinished");
             timeWasTriggered = true;

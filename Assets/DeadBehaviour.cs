@@ -1,18 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PatrolEntryBehaviour : StateMachineBehaviour {
+public class DeadBehaviour : StateMachineBehaviour {
 
-	 //OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
+	 // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
 	override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-
-        Wander wander;
-
-        wander = animator.gameObject.GetComponent<Wander>(); 
-
-        wander.m_countdown.ResetTimer(0);
-        animator.SetTrigger("patrolEntry");
-        animator.SetBool("finishedTime", false); 
+        animator.gameObject.SetActive(false); 
+	
 	}
 
 	// OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

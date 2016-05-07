@@ -38,7 +38,7 @@ public class SearchSoundHeardTargetComputer : FindingNewTargetBehaviour
     public override Vector3 computeNextDestination(Animator animator)
     {
         Vector3 soundPos = animator.gameObject.GetComponent<Wander>().touch.soundPosition;
-        wander.randomSearchDest = soundPos;
+        wander.m_randomSearchDest = soundPos;
         return soundPos; 
     }
 }
