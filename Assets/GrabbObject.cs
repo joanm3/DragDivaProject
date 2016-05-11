@@ -8,7 +8,9 @@ public class GrabbObject : MonoBehaviour {
     [SerializeField]
     private bool bDebug = false; 
 
+    [SerializeField]
     private bool m_isGrabbing = false;
+    [SerializeField]
     private Transform m_objectToGrabb; 
 
 
@@ -47,7 +49,6 @@ public class GrabbObject : MonoBehaviour {
             return;
         Material material = m_objectToGrabb.GetComponent<MeshRenderer>().material;
         material.color = Color.white;
-        m_objectToGrabb = null;
         if (bDebug)
             Debug.Log("Object to dragg is " + m_objectToGrabb);
 
@@ -75,7 +76,7 @@ public class GrabbObject : MonoBehaviour {
         {
            // Debug.Log("Grabb button touched");
             m_objectToGrabb.parent = null;
-
+            m_objectToGrabb = null;
             m_isGrabbing = false;
 
         }
